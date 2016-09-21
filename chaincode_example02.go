@@ -312,7 +312,43 @@ func (t *SimpleChaincode) GetUsername(stub *shim.ChaincodeStub) (string, error) 
     bytes, err := stub.GetCallerCertificate();
                                                             if err != nil { return "", errors.New("Couldn't retrieve caller certificate") }
     x509Cert, err := x509.ParseCertificate(bytes);              // Extract Certificate from result of GetCallerCertificate                      
+    
                                                             if err != nil { return "", errors.New("Couldn't parse certificate") }
+    fmt.Println("############## CERT #################")
+	fmt.Println(x509Cert)                         
+
+	callerRole, err := stub.ReadCertAttribute("role")
+	if err != nil {
+		fmt.Printf("Error reading attribute 'role' [%v] \n", err)
+		return "", fmt.Errorf("Failed fetching caller role. Error was [%v]", err)
+	}
+
+	fmt.Println("############### CALLER ROLE ##################")
+	fmt.Println(string(callerRole))
+
+	af, err := stub.ReadCertAttribute("affiliation")
+	if err != nil {
+		fmt.Printf("Error reading attribute 'role' [%v] \n", err)
+		
+	}
+
+	fmt.Println("Affiliation%%%%%%%%%%%%%%%%%%")
+	fmt.Println(string(af))
+
+	ar, err := stub.ReadCertAttribute("affiliationRole")
+	if err != nil {
+		fmt.Printf("Error reading attribute 'role' [%v] \n", err)
+		
+	}
+
+	fmt.Println("AffiliationROLE")
+	fmt.Println(string(ar))
+
+	bytes, err2 := stub.GetCallerMetadata();
+                                                            if err2 != nil { return "", errors.New("Couldn't retrieve caller metadata") }
+	
+	fmt.Println(string(bytes))                                                            
+
                                                             
     return x509Cert.Subject.CommonName, nil
 }
