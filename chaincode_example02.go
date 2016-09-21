@@ -21,7 +21,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-
+	"encoding/json"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
@@ -226,9 +226,19 @@ func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args 
 }
 
 
+type cust struct {
+	ID string `json:"id"`
+	name string `json:"name"`
+	age int `json:"age"`
+}
+
+
 func (t *SimpleChaincode) varunWrite(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 
-	err := stub.PutState("varun_name", []byte("Varun Ojha is my name"))
+	c := cust{"24", "Varun Ojha", 32}
+	bytes, err := json.Marshal(c)
+
+	err = stub.PutState("varun_name", bytes)
 	if err != nil {
 		return nil, err
 	}
