@@ -172,7 +172,7 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	}else if function == "callerData" {
 		// Deletes an entity from its state
 		fmt.Printf("Function is callerData")
-		return t.GetCallerdata(stub)
+		return t.GetCallerdata(stub, args)
 	}
 
 	return nil, errors.New("Received unknown function invocation")
@@ -278,12 +278,12 @@ type ECertResponse struct {
 //   get_ecert - Takes the name passed and calls out to the REST API for HyperLedger to retrieve the ecert
 //               for that user. Returns the ecert as retrived including html encoding.
 //==============================================================================================================================
-func (t *SimpleChaincode) GetEcert(stub *shim.ChaincodeStub, name string) ([]byte, error) {
+func (t *SimpleChaincode) GetEcert(stub *shim.ChaincodeStub, name string, peer_address string) ([]byte, error) {
     
     var cert ECertResponse
     
-    peer_address, err := stub.GetState("Peer_Address")
-                                                            if err != nil { return nil, errors.New("Error retrieving peer address") }
+   /* peer_address, err := stub.GetState("Peer_Address")
+                                                            if err != nil { return nil, errors.New("Error retrieving peer address") }*/
 
     response, err := http.Get("http://"+string(peer_address)+"/registrar/"+name+"/ecert")   // Calls out to the HyperLedger REST API to get the ecert of the user with that name
     
@@ -348,7 +348,7 @@ func (t *SimpleChaincode) CheckAffiliation(stub *shim.ChaincodeStub, cert string
 //                   name passed.
 //==============================================================================================================================
 
-func (t *SimpleChaincode) GetCallerdata(stub *shim.ChaincodeStub) ([]byte, error){
+func (t *SimpleChaincode) GetCallerdata(stub *shim.ChaincodeStub, args[] string) ([]byte, error){
 
     fmt.Println("Entering GetCallerdata")
 
@@ -362,7 +362,7 @@ func (t *SimpleChaincode) GetCallerdata(stub *shim.ChaincodeStub) ([]byte, error
         fmt.Println(user)
 
                                                                         
-    ecert, err := t.GetEcert(stub, user);                   
+    ecert, err := t.GetEcert(stub, user, args[0]);                   
         if err != nil {
             fmt.Println("COULD NOT GET ECERT %s", err); 
             return nil,  err 
