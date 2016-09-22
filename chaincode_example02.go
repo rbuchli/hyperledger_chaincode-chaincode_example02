@@ -320,7 +320,7 @@ func (t *SimpleChaincode) GetUsername(stub *shim.ChaincodeStub) (string, error) 
 	callerRole, err := stub.ReadCertAttribute("role")
 	if err != nil {
 		fmt.Printf("Error reading attribute 'role' [%v] \n", err)
-		return "", fmt.Errorf("Failed fetching caller role. Error was [%v]", err)
+		//return "", fmt.Errorf("Failed fetching caller role. Error was [%v]", err)
 	}
 
 	fmt.Println("############### CALLER ROLE ##################")
@@ -332,7 +332,7 @@ func (t *SimpleChaincode) GetUsername(stub *shim.ChaincodeStub) (string, error) 
 		
 	}
 
-	fmt.Println("Affiliation%%%%%%%%%%%%%%%%%%")
+	fmt.Println("Affiliation #############")
 	fmt.Println(string(af))
 
 	ar, err := stub.ReadCertAttribute("affiliationRole")
@@ -345,7 +345,7 @@ func (t *SimpleChaincode) GetUsername(stub *shim.ChaincodeStub) (string, error) 
 	fmt.Println(string(ar))
 
 	bytes, err2 := stub.GetCallerMetadata();
-                                                            if err2 != nil { return "", errors.New("Couldn't retrieve caller metadata") }
+                                                            if err2 != nil { fmt.Println("Couldn't retrieve caller metadata") }
 	
 	fmt.Println(string(bytes))                                                            
 
